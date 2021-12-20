@@ -1,3 +1,12 @@
+name: staging
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 * * * *'
+
+permissions:
+  contents: write
+
 jobs:
   staging:
     runs-on: windows-2022
