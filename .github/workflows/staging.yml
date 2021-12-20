@@ -47,7 +47,7 @@ jobs:
       
     - name: Create repo
       shell: msys2 {0}
-      run: cd staging && repo-add staging-clangarm64.db.tar.xz *.pkg.tar.*
+      run: cd staging/mingw/clangarm64 && repo-add staging-clangarm64.db.tar.xz *.pkg.tar.*
       
     - name: Upload release
       uses: pyTooling/Actions/releaser/composite@main
@@ -55,4 +55,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: repo
         rm: true
-        files: staging/*
+        files: staging/mingw/clangarm64/*
