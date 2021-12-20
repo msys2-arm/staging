@@ -1,0 +1,49 @@
+jobs:
+  staging:
+    runs-on: windows-2022
+    steps:
+    - name: Checkout autobuild
+      uses: actions/checkout@v2
+      with:
+        repository: msys2-arm/msys2-autobuild
+        path: mab
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - uses: actions/cache@v2
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-pip-
+
+    - name: Install deps
+      env:
+        PIP_DISABLE_PIP_VERSION_CHECK: 1
+      run: |
+        python -m pip install --user 'wheel==0.36.2'
+        python -m pip install --user -r mab/requirements.txt
+        
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: MSYS
+        update: true
+        release: false
+    
+    - name: Fetch assets
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python -u mab/autobuild.py fetch-assets --fetch-all -t clangarm64 staging
+      
+    - name: Create repo
+      shell: msys2 {0}
+      run: cd staging && repo-add staging-clangarm64.db.tar.xz *.pkg.tar.*
+      
+    - name: Upload release
+      uses: pyTooling/Actions/releaser/composite@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: repo
+        rm: true
+        files: staging/*
