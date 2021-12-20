@@ -50,7 +50,7 @@ jobs:
       run: cd staging/mingw/clangarm64 && repo-add staging-clangarm64.db.tar.xz *.pkg.tar.*
       
     - name: Upload release
-      uses: jeremyd2019/Actions/releaser/composite@main
+      uses: pyTooling/Actions/releaser/composite@dev
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: repo
