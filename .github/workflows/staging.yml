@@ -16,6 +16,7 @@ jobs:
       with:
         repository: msys2-arm/msys2-autobuild
         path: mab
+
     - uses: actions/setup-python@v2
       with:
         python-version: '3.8'
@@ -50,7 +51,7 @@ jobs:
       run: cd staging/mingw/clangarm64 && repo-add staging-clangarm64.db.tar.xz *.pkg.tar.*
       
     - name: Upload release
-      uses: pyTooling/Actions/releaser/composite@dev
+      uses: pyTooling/Actions/releaser/composite@r0
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: repo
