@@ -14,7 +14,7 @@ jobs:
     - name: Checkout autobuild
       uses: actions/checkout@v2
       with:
-        repository: msys2-arm/msys2-autobuild
+        repository: msys2/msys2-autobuild
         path: mab
 
     - uses: actions/setup-python@v2
@@ -44,7 +44,7 @@ jobs:
     - name: Fetch assets
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: python -u mab/autobuild.py fetch-assets --fetch-all -t clangarm64 staging
+      run: python -u mab/autobuild.py -R msys2-arm/msys2-autobuild fetch-assets --fetch-all -t clangarm64 staging
       
     - name: Create repo
       shell: msys2 {0}
